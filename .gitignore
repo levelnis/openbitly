@@ -1,0 +1,11 @@
+# git ignore file
+_ReSharper.*
+[B|b]in/
+obj/
+*.suo
+*.user
+*.DotSettings
+*.log
+*.ncrunch*
+*.cache
+packages/
