@@ -7,6 +7,9 @@ namespace OpenBitly.Serialization
     public class BitlyData
     {
         [DataMember]
-        public BitlyList<string> Values { get; set; }
+        public virtual BitlyList<string> Values { get; set; }
+
+        [DataMember]
+        public virtual BitlyList<BitlySearch> Results { get; set; } 
     }
 }

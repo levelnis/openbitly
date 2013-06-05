@@ -11,6 +11,8 @@
 	
 	var manifests = new string[] { 
 		"_BitlyService.1.Data.json", 	
+		"_BitlyService.2.Links.json", 	
+		"_BitlyService.3.LinkMetrics.json", 	
 	};
 
 	foreach(var manifest in manifests)
@@ -58,7 +60,7 @@ namespace OpenBitly
 		{
 			<# foreach(var parameter in method.Parameters) { #>var <#= parameter.Name #> = options.<#= parameter.PropertyName #>;<# } #>	
 			
-			return WithHammock<<#= method.Type #>>(<# switch(method.Method){case "POST": #>WebMethod.Post, <# break; case "PUT": #>WebMethod.Put, <#break; case "DELETE": #>WebMethod.Delete, <# break; case "HEAD":#>WebMethod.Head, <# break; case "OPTIONS": #>WebMethod.Options, <# break; default: break; } #><#= method.Path #>, FormatAsString<# var count = method.Parameters.Count(); if(count > 0) { #>, <# } #><# for(var i = 0; i < count; i++) { var parameter = method.Parameters[i]; #>"<# if(i == 0) { #>?<# } else { #>&<# } #><#= Helpers.Underscore(parameter.Name) #>=", <#= parameter.Name #><# if(i < count - 1) { #>, <# } #><# } #>);
+			return WithHammock<<#= method.Type #>>(<# switch(method.Method){case "POST": #>WebMethod.Post, <# break; case "PUT": #>WebMethod.Put, <#break; case "DELETE": #>WebMethod.Delete, <# break; case "HEAD":#>WebMethod.Head, <# break; case "OPTIONS": #>WebMethod.Options, <# break; default: break; } #><#= method.Path #>, FormatAsString<# var count = method.Parameters.Count(); if(count > 0) { #>, <# } #><# for(var i = 0; i < count; i++) { var parameter = method.Parameters[i]; #>"<# if(i == 0) { #>?<# } else { #>&<# } #><#= method.ParametersAreLeftVerbatim ? parameter.Name : Helpers.Underscore(parameter.Name) #>=", <#= parameter.Name #><# if(i < count - 1) { #>, <# } #><# } #>);
 		}
 
 <# } #>
@@ -88,6 +90,13 @@ namespace OpenBitly
 			{
 				camelCase = camelCase.Substring(1);
 			}
+
+			// bitly has occasions where parameters should not be underscored but should be left camel cased. Add a + to the start to stop the underscore transform
+			if (camelCase.StartsWith("+"))
+			{
+				return camelCase;
+			}
+
 			var underscored = Regex.Replace(camelCase, UnderscoresPattern,
 											new MatchEvaluator(m => string.Concat("_", m.Value.ToLowerInvariant())),
 											RegexOptions.Compiled);
@@ -122,6 +131,10 @@ namespace OpenBitly
 		{
 			get; private set;
 		}
+		public bool ParametersAreLeftVerbatim
+		{
+			get; private set;
+		}
 
 		private string[] SplitLine(string line){
 			var parts = line.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
@@ -144,6 +157,12 @@ namespace OpenBitly
 			 if(parts.Length > 0 && parts[0].Equals("DEPRECATED"))
 			 {
 				IsDeprecated = true;
+				parts = parts.Skip(1).ToArray();
+			 }
+
+			 if(parts.Length > 0 && parts[0].Equals("VERBATIM"))
+			 {
+				ParametersAreLeftVerbatim = true;
 				parts = parts.Skip(1).ToArray();
 			 }
 

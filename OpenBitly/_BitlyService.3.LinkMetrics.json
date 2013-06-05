@@ -1,0 +1,23 @@
+﻿// https://api-ssl.bitly.com/v3/link/clicks
+BitlyLinkResult, "link/clicks", GetClickCount, string link
+
+// https://api-ssl.bitly.com/v3/link/countries
+// todo
+
+// https://api-ssl.bitly.com/v3/link/encoders
+// todo
+
+// https://api-ssl.bitly.com/v3/link/encoders_count
+// todo
+
+// https://api-ssl.bitly.com/v3/link/referrers
+// todo
+
+// https://api-ssl.bitly.com/v3/link/referrers_by_domain
+// todo
+
+// https://api-ssl.bitly.com/v3/link/referring_domains
+// todo
+
+// https://api-ssl.bitly.com/v3/link/shares
+// todo

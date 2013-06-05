@@ -9,4 +9,5 @@ obj/
 *.ncrunch*
 *.cache
 *.nupkg
+*.bak
 packages/

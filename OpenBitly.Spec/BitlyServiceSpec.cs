@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Net;
+using System.Web;
 using NBehave.Spec.NUnit;
 using NUnit.Framework;
 using OpenBitly.Serialization;
@@ -83,7 +84,81 @@ namespace OpenBitly.Spec
         [Test]
         public void ThenItShouldReturn2Links()
         {
-            result.Data.Values.Count.ShouldEqual(2);
+            result.Data.Values.Count.ShouldEqual(InputLimit);
+        }
+    }
+
+    public class WhenGettingLinkClicks : GivenAnAuthenticatedBitlyService
+    {
+        private GetClickCountOptions input;
+        private const string Link = "http://bit.ly/13aeJYW";
+        private const int ClickCount = 3; // this is very flaky - it's a live link and only equals 3 until someone pastes the link into their browser
+        private BitlyLinkResult result;
+
+        protected override BitlyService Establish_context()
+        {
+            input = new GetClickCountOptions {Link = HttpUtility.UrlEncode(Link)};
+            return base.Establish_context();
+        }
+
+        protected override void Because_of()
+        {
+            result = Sut.GetClickCount(input);
+        }
+
+        [Test]
+        public void ThenItShouldReturn3SearchResults()
+        {
+            result.Data.LinkClicks.ShouldEqual(ClickCount);
+        }
+    }
+
+    public class WhenSearchingForLinks : GivenAnAuthenticatedBitlyService
+    {
+        private ListSearchResultsOptions input;
+        private const int InputLimit = 3;
+        private const string Query = "obama";
+        private BitlyResult result;
+
+        protected override BitlyService Establish_context()
+        {
+            input = new ListSearchResultsOptions {Limit = InputLimit, Query = Query};
+            return base.Establish_context();
+        }
+
+        protected override void Because_of()
+        {
+            result = Sut.ListSearchResults(input);
+        }
+
+        [Test]
+        public void ThenItShouldReturn3SearchResults()
+        {
+            result.Data.Results.Count.ShouldEqual(InputLimit);
+        }
+    }
+
+    public class WhenShorteningAUrl : GivenAnAuthenticatedBitlyService
+    {
+        private ShortenUrlOptions input;
+        private const string LongUrl = "http://levelnis.co.uk/";
+        private BitlyShortenResult result;
+
+        protected override BitlyService Establish_context()
+        {
+            input = new ShortenUrlOptions { Longurl = HttpUtility.UrlEncode(LongUrl) };
+            return base.Establish_context();
+        }
+
+        protected override void Because_of()
+        {
+            result = Sut.ShortenUrl(input); 
+        }
+
+        [Test]
+        public void ThenItShouldReturn3SearchResults()
+        {
+            result.Data.Url.StartsWith("http://bit.ly/").ShouldBeTrue();
         }
     }
 }

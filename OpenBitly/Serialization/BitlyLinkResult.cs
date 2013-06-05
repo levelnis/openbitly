@@ -4,9 +4,9 @@ using System.Runtime.Serialization;
 namespace OpenBitly.Serialization
 {
     [Serializable]
-    public class BitlyResult : BitlyEntity
+    public class BitlyLinkResult : BitlyEntity
     {
         [DataMember]
-        public virtual BitlyData Data { get; set; }
+        public virtual BitlyLinkData Data { get; set; }
     }
 }

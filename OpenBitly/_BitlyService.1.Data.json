@@ -2,7 +2,7 @@
 BitlyResult, "highvalue", ListHighValueLinks, int limit
 
 // https://api-ssl.bitly.com/v3/search
-// todo
+BitlyResult, "search", ListSearchResults, int limit, int offset, string query, string lang, string cities, string domain, string fields
 
 // https://api-ssl.bitly.com/v3/realtime/bursting_phrases
 // todo
