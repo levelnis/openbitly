@@ -1,0 +1,173 @@
+<#@ template language="C#" hostspecific="True" #>
+<#@ output extension=".generated.cs" #>
+<#@ include file="T4Toolbox.tt" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Linq" #>
+<#
+	var methods = new List<OpenBitlyMethod>();
+	
+	var manifests = new string[] { 
+		"_BitlyService.1.Data.json", 	
+	};
+
+	foreach(var manifest in manifests)
+	{
+		string absolutePath = Host.ResolvePath(manifest);
+		string contents = File.ReadAllText(absolutePath);
+
+		var lines = contents.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+		lines = lines.Where(l => !l.StartsWith("//")).ToArray(); // <-- Ignore comments
+
+		foreach(var line in lines)
+		{
+			var method = new OpenBitlyMethod(line);
+			methods.Add(method);
+		}
+	}	
+#>
+/// <summary>
+/// This code is generated. Any changes to it will be destroyed on subsequent generations. Use the DSL instead.
+/// </summary>
+
+using System;
+using System.IO;
+using System.Collections.Generic;
+using OpenBitly.Serialization;
+
+namespace OpenBitly 
+{
+<# foreach(OpenBitlyMethod method in methods) { if(method.Parameters.Count == 0) continue; #><#= method.IsDeprecated ? "[Obsolete(\"Bitly has declared this method obsolete; it may cease to function at any time. Check http://dev.bitly.com/deprecated.html for alternatives.\")]" : "" #>		
+	public class <#= method.Name #>Options
+	{<# foreach(var parameter in method.Parameters) { #> 
+		public <#= parameter.Type #> <#= parameter.PropertyName #> { get; set; } <# } #>			
+	}			
+<# } #>
+
+	public interface IBitlyService
+	{<# foreach(OpenBitlyMethod method in methods) { #><#= method.IsDeprecated ? "[Obsolete(\"Bitly has declared this method obsolete; it may cease to function at any time. Check http://dev.bitly.com/deprecated.html for alternatives.\")]" : "" #>
+		<#= method.Type #> <#= method.Name #>(<# if(method.Parameters.Count > 0) { #><#= method.Name #>Options options<# } #>);	
+<# } #>
+	}
+
+	public partial class BitlyService : IBitlyService
+	{<# foreach(OpenBitlyMethod method in methods) { #><#= method.IsDeprecated ? "[Obsolete(\"Bitly has declared this method obsolete; it may cease to function at any time. Check http://dev.bitly.com/deprecated.html for alternatives.\")]" : "" #>
+		public virtual <#= method.Type #> <#= method.Name #>(<# if(method.Parameters.Count > 0) { #><#= method.Name #>Options options<# } #>)
+		{
+			<# foreach(var parameter in method.Parameters) { #>var <#= parameter.Name #> = options.<#= parameter.PropertyName #>;<# } #>	
+			
+			return WithHammock<<#= method.Type #>>(<# switch(method.Method){case "POST": #>WebMethod.Post, <# break; case "PUT": #>WebMethod.Put, <#break; case "DELETE": #>WebMethod.Delete, <# break; case "HEAD":#>WebMethod.Head, <# break; case "OPTIONS": #>WebMethod.Options, <# break; default: break; } #><#= method.Path #>, FormatAsString<# var count = method.Parameters.Count(); if(count > 0) { #>, <# } #><# for(var i = 0; i < count; i++) { var parameter = method.Parameters[i]; #>"<# if(i == 0) { #>?<# } else { #>&<# } #><#= Helpers.Underscore(parameter.Name) #>=", <#= parameter.Name #><# if(i < count - 1) { #>, <# } #><# } #>);
+		}
+
+<# } #>
+	}
+}
+<#+
+	internal class Helpers
+	{
+		private const string UnderscoresPattern = "(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))";
+
+		public static string Capitalize(string upperCase)
+        {
+            var lower = upperCase.ToLowerInvariant();
+            return char.ToUpperInvariant(lower[0]) + lower.Substring(1);
+        }
+
+		public static string PascalCase(string lowercaseUnderscore)
+		{
+			var cultureInfo = System.Threading.Thread.CurrentThread.CurrentCulture;
+			var titleCase = cultureInfo.TextInfo.ToTitleCase(lowercaseUnderscore.ToLower());
+			return titleCase.Replace("_", "");
+		}
+
+		public static string Underscore(string camelCase)
+		{
+			if(camelCase.StartsWith("@"))
+			{
+				camelCase = camelCase.Substring(1);
+			}
+			var underscored = Regex.Replace(camelCase, UnderscoresPattern,
+											new MatchEvaluator(m => string.Concat("_", m.Value.ToLowerInvariant())),
+											RegexOptions.Compiled);
+
+			return underscored;
+		}		
+	}
+
+	internal class OpenBitlyMethod
+	{
+		public string Type
+		{
+			get; private set;
+		}
+		public string Name
+		{
+			get; private set;
+		}
+		public string Path
+		{
+			get; private set;
+		}
+		public string Method
+		{
+			get; private set;
+		}
+		public List<OpenBitlyMethodParameter> Parameters
+		{
+			get; private set;
+		}
+		public bool IsDeprecated
+		{
+			get; private set;
+		}
+
+		private string[] SplitLine(string line){
+			var parts = line.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+			var retParts = new List<string>();
+			for(var i = 0; i < parts.Length;i++){
+				var part = parts[i];
+				// for idictionary types
+				if(part.Contains("<") && !part.Contains(">")){
+					part+=string.Format(",{0}", parts[i+1]);
+					i++;
+                }
+				retParts.Add(part);
+            }
+			return retParts.ToArray();
+        }
+
+		public OpenBitlyMethod(string line)
+		{
+		     var parts = SplitLine(line);
+			 if(parts.Length > 0 && parts[0].Equals("DEPRECATED"))
+			 {
+				IsDeprecated = true;
+				parts = parts.Skip(1).ToArray();
+			 }
+
+			 Type = parts[0].Trim();
+			 
+			 var pathParts = parts[1].Trim().Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+			 Path = pathParts[0];
+			 Method = pathParts.Length > 1 ? Method = pathParts[1] : "GET";
+
+			 Name = parts[2].Trim();
+
+			 Parameters = new List<OpenBitlyMethodParameter>();
+			 for(var i = 3; i < parts.Length; i++)
+			 {
+				var data = parts[i].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+				Parameters.Add(new OpenBitlyMethodParameter { Type = data[0], Name = data[1], PropertyName = Helpers.PascalCase(data[1]) });
+			 }
+		}
+	}
+
+	internal class OpenBitlyMethodParameter
+	{
+		public string Type { get; set; }
+		public string Name { get; set; }
+		public string PropertyName { get; set; }
+	}
+#>

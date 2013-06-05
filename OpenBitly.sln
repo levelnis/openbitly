@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{22038772-A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBitly", "OpenBitly\OpenBitly.csproj", "{022C7AB1-AAD5-4126-B825-2541D17573B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBitly.Spec.Unit", "OpenBitly.Spec.Unit\OpenBitly.Spec.Unit.csproj", "{EE8E1A2E-72BC-4948-90F4-3D26D657EF68}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{72875DB5-34ED-497C-95D8-235FC1348F51}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -20,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "package", "package", "{3CA3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.OpenBitlyPackager", "NuGet.OpenBitlyPackager\NuGet.OpenBitlyPackager.csproj", "{0451BAEF-DF2E-4B98-8644-94EE9415E389}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenBitly.Spec", "OpenBitly.Spec\OpenBitly.Spec.csproj", "{EE8E1A2E-72BC-4948-90F4-3D26D657EF68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,14 +30,14 @@ Global
 		{022C7AB1-AAD5-4126-B825-2541D17573B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{022C7AB1-AAD5-4126-B825-2541D17573B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{022C7AB1-AAD5-4126-B825-2541D17573B6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE8E1A2E-72BC-4948-90F4-3D26D657EF68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE8E1A2E-72BC-4948-90F4-3D26D657EF68}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE8E1A2E-72BC-4948-90F4-3D26D657EF68}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE8E1A2E-72BC-4948-90F4-3D26D657EF68}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE8E1A2E-72BC-4948-90F4-3D26D657EF68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE8E1A2E-72BC-4948-90F4-3D26D657EF68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE8E1A2E-72BC-4948-90F4-3D26D657EF68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE8E1A2E-72BC-4948-90F4-3D26D657EF68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

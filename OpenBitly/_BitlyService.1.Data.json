@@ -1,0 +1,32 @@
+﻿// https://api-ssl.bitly.com/v3/highvalue
+BitlyResult, "highvalue", ListHighValueLinks, int limit
+
+// https://api-ssl.bitly.com/v3/search
+// todo
+
+// https://api-ssl.bitly.com/v3/realtime/bursting_phrases
+// todo
+
+// https://api-ssl.bitly.com/v3/realtime/hot_phrases
+// todo
+
+// https://api-ssl.bitly.com/v3/realtime/clickrate
+// todo
+
+// https://api-ssl.bitly.com/v3/link/info
+// todo
+
+// https://api-ssl.bitly.com/v3/link/content
+// todo
+
+// https://api-ssl.bitly.com/v3/link/category
+// todo
+
+// https://api-ssl.bitly.com/v3/link/social
+// todo
+
+// https://api-ssl.bitly.com/v3/link/location
+// todo
+
+// https://api-ssl.bitly.com/v3/link/language
+// todo
