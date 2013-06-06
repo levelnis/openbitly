@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>OpenBitly</id>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
     <title>OpenBitly</title>
     <authors>Simon Rigby</authors>
     <owners>Levelnis</owners>
@@ -22,11 +22,15 @@
     <copyright>Copyright  2013</copyright>
     <dependencies>
         <group targetFramework="net45">
-          <dependency id="Hammock" version="1.3.1" />
           <dependency id="Newtonsoft.Json" version="5.0.5" />
         </group>
+        <group targetFramework="net40">
+          <dependency id="Hammock" version="1.3.1" />
+        </group>
     </dependencies>
-    <references></references>
+    <references>
+      <reference file="OpenBitly.dll" />
+    </references>
     <tags>bitly openbitly oauth web api http rest wrapper</tags>
   </metadata>
   <files>
