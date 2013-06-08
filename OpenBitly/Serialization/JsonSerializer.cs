@@ -42,11 +42,6 @@ namespace OpenBitly.Serialization
             return (T)DeserializeContent(content, typeof(T));
         }
 
-        public override object DeserializeJson(string content, Type type)
-        {
-            return type == typeof(BitlyError) ? DeserializeContent(content, type) : base.DeserializeJson(content, type);
-        }
-
         public override T DeserializeJson<T>(string content)
         {
             return (T)DeserializeContent(content, typeof(T));
@@ -57,29 +52,6 @@ namespace OpenBitly.Serialization
             if (string.IsNullOrEmpty(content) || content.Trim().Length == 0)
             {
                 return null;
-            }
-
-            if (type == typeof (BitlyError))
-            {
-                // {"errors":[{"message":"Bad Authentication data","code":215}]}
-                content = content.Trim('\n');
-                if (content.StartsWith("{\"status_code\": 50"))
-                {
-                    var errors = (JArray)JObject.Parse(content)["errors"];
-                    if (errors != null)
-                    {
-                        var result = new BitlyError { RawSource = content };
-                        var error = errors.First;
-                        result.Message = error["message"].ToString();
-                        result.Code = int.Parse(error["code"].ToString());
-                        return result;
-                    }
-                }
-                else
-                {
-                    var unknown = new BitlyError { RawSource = content };
-                    return unknown;
-                }
             }
 
             var deserialized = DeserializeJson(content, type);

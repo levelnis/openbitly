@@ -10,16 +10,17 @@
       A Bitly API Wrapper service that uses OAuth 2.0 authentication and T4 templates to make adding new endpoints easy.
     </description>
     <releaseNotes>
+      1.0.5 - added GetClickCountOverTime which calls /v3/link/clicks with rollup=false.
     </releaseNotes>
     <summary>
       Bitly API Wrapper using OAuth 2.0 written in C#.
     </summary>
     <language>en-GB</language>
-    <projectUrl>https://nuget.org/packages/OpenBitly</projectUrl>
+    <projectUrl>https://github.com/levelnis/openbitly</projectUrl>
     <iconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
-    <copyright>Copyright  2013</copyright>
+    <copyright>Copyright Levelnis 2013</copyright>
     <dependencies>
         <group targetFramework="net45">
           <dependency id="Newtonsoft.Json" version="5.0.5" />
@@ -35,7 +36,5 @@
   </metadata>
   <files>
     <file src="lib\" target="lib" />
-    <file src="tools\" target="tools" />
-    <file src="content\" target="content" />
   </files>
 </package>

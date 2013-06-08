@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Net;
 using System.Web;
 using NBehave.Spec.NUnit;
@@ -92,7 +93,7 @@ namespace OpenBitly.Spec
     {
         private GetClickCountOptions input;
         private const string Link = "http://bit.ly/13aeJYW";
-        private const int ClickCount = 3; // this is very flaky - it's a live link and only equals 3 until someone pastes the link into their browser
+        private const int ClickCount = 4; // this is very flaky - it's a live link and only equals 4 until someone pastes the link into their browser
         private BitlyLinkResult result;
 
         protected override BitlyService Establish_context()
@@ -107,9 +108,80 @@ namespace OpenBitly.Spec
         }
 
         [Test]
-        public void ThenItShouldReturn3SearchResults()
+        public void ThenItShouldReturn4SearchResults()
         {
             result.Data.LinkClicks.ShouldEqual(ClickCount);
+        }
+
+        [Test]
+        public void ThenItShouldReturnStatusCode200()
+        {
+            result.StatusCode.ShouldEqual(200);
+        }
+
+        [Test]
+        public void ThenItShouldReturnStatusTxtOk()
+        {
+            result.StatusTxt.ShouldEqual("OK");
+        }
+    }
+
+    public class WhenGettingLinkClicksOverTime : GivenAnAuthenticatedBitlyService
+    {
+        private GetClickCountOverTimeOptions input;
+        private const string Link = "http://bit.ly/13aeJYW";
+        private const int DayCount = 2; // this is very flaky - it's a live link and only equals 2 until someone pastes the link into their browser
+        private const int FirstDayCount = 1; 
+        private const int SecondDayCount = 3; 
+        private DateTime firstDay = new DateTime(2013, 6, 8);
+        private DateTime secondDay = new DateTime(2013, 6, 5);
+        private BitlyLinkCollectionResult result;
+
+        protected override BitlyService Establish_context()
+        {
+            input = new GetClickCountOverTimeOptions { Link = HttpUtility.UrlEncode(Link), Unit = "day", Units = -1, Rollup = false };
+            return base.Establish_context();
+        }
+
+        protected override void Because_of()
+        {
+            result = Sut.GetClickCountOverTime(input);
+        }
+
+        [Test]
+        public void ThenItShouldReturn2DaysOfResults()
+        {
+            result.Data.LinkClicks.Count.ShouldEqual(DayCount);
+        }
+
+        [Test]
+        public void ThenItShouldReturn3SearchResultsOnTheFirstDay()
+        {
+            var linkClick = result.Data.LinkClicks[0];
+            var dateTime = linkClick.Dt.AsDateTime();
+            linkClick.Clicks.ShouldEqual(FirstDayCount);
+            dateTime.Date.ShouldEqual(firstDay.Date);
+        }
+
+        [Test]
+        public void ThenItShouldReturn1SearchResultOnTheSecondDay()
+        {
+            var linkClick = result.Data.LinkClicks[1];
+            var dateTime = linkClick.Dt.AsDateTime();
+            linkClick.Clicks.ShouldEqual(SecondDayCount);
+            dateTime.Date.ShouldEqual(secondDay.Date);
+        }
+
+        [Test]
+        public void ThenItShouldReturnStatusCode200()
+        {
+            result.StatusCode.ShouldEqual(200);
+        }
+
+        [Test]
+        public void ThenItShouldReturnStatusTxtOk()
+        {
+            result.StatusTxt.ShouldEqual("OK");
         }
     }
 
@@ -136,6 +208,18 @@ namespace OpenBitly.Spec
         {
             result.Data.Results.Count.ShouldEqual(InputLimit);
         }
+
+        [Test]
+        public void ThenItShouldReturnStatusCode200()
+        {
+            result.StatusCode.ShouldEqual(200);
+        }
+
+        [Test]
+        public void ThenItShouldReturnStatusTxtOk()
+        {
+            result.StatusTxt.ShouldEqual("OK");
+        }
     }
 
     public class WhenShorteningAUrl : GivenAnAuthenticatedBitlyService
@@ -159,6 +243,18 @@ namespace OpenBitly.Spec
         public void ThenItShouldReturn3SearchResults()
         {
             result.Data.Url.StartsWith("http://bit.ly/").ShouldBeTrue();
+        }
+
+        [Test]
+        public void ThenItShouldReturnStatusCode200()
+        {
+            result.StatusCode.ShouldEqual(200);
+        }
+
+        [Test]
+        public void ThenItShouldReturnStatusTxtOk()
+        {
+            result.StatusTxt.ShouldEqual("OK");
         }
     }
 }

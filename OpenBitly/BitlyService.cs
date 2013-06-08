@@ -55,7 +55,6 @@ namespace OpenBitly
                 Authority = Globals.Authority,
                 UserAgent = "OpenBitly",
                 DecompressionMethods = DecompressionMethods.GZip,
-                GetErrorResponseEntityType = (request, @base) => typeof (BitlyError),
             };
 
             client = new RestClient
@@ -66,7 +65,6 @@ namespace OpenBitly
                 Serializer = json,
                 Deserializer = json,
                 DecompressionMethods = DecompressionMethods.GZip,
-                GetErrorResponseEntityType = (request, @base) => typeof(BitlyError),
                 UserAgent = "OpenBitly",
                 FollowRedirects = true,
             };
@@ -145,8 +143,7 @@ namespace OpenBitly
 
                 if (segments[i] is bool)
                 {
-                    var flag = (bool)segments[i];
-                    segments[i] = flag ? "1" : "0";
+                    segments[i] = ((bool)segments[i]).ToString().ToLowerInvariant();
                 }
 
                 if (segments[i] is double)

@@ -1,6 +1,9 @@
 ﻿// https://api-ssl.bitly.com/v3/link/clicks
 BitlyLinkResult, "link/clicks", GetClickCount, string link
 
+// https://api-ssl.bitly.com/v3/link/clicks
+BitlyLinkCollectionResult, "link/clicks", GetClickCountOverTime, int units, bool rollup, string link, string unit
+
 // https://api-ssl.bitly.com/v3/link/countries
 // todo
 

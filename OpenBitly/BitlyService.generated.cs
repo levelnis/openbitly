@@ -35,6 +35,14 @@ namespace OpenBitly
 	{ 
 		public string Link { get; set; } 			
 	}			
+		
+	public class GetClickCountOverTimeOptions
+	{ 
+		public int Units { get; set; }  
+		public bool Rollup { get; set; }  
+		public string Link { get; set; }  
+		public string Unit { get; set; } 			
+	}			
 
 	public interface IBitlyService
 	{
@@ -45,12 +53,15 @@ namespace OpenBitly
 		BitlyShortenResult ShortenUrl(ShortenUrlOptions options);	
 
 		BitlyLinkResult GetClickCount(GetClickCountOptions options);	
+
+		BitlyLinkCollectionResult GetClickCountOverTime(GetClickCountOverTimeOptions options);	
 	}
 
 	public partial class BitlyService : IBitlyService
 	{
 		public virtual BitlyResult ListHighValueLinks(ListHighValueLinksOptions options)
 		{
+			 
 			var limit = options.Limit;	
 			
 			return WithHammock<BitlyResult>("highvalue", FormatAsString, "?limit=", limit);
@@ -59,7 +70,14 @@ namespace OpenBitly
 
 		public virtual BitlyResult ListSearchResults(ListSearchResultsOptions options)
 		{
-			var limit = options.Limit;var offset = options.Offset;var query = options.Query;var lang = options.Lang;var cities = options.Cities;var domain = options.Domain;var fields = options.Fields;	
+			 
+			var limit = options.Limit; 
+			var offset = options.Offset; 
+			var query = options.Query; 
+			var lang = options.Lang; 
+			var cities = options.Cities; 
+			var domain = options.Domain; 
+			var fields = options.Fields;	
 			
 			return WithHammock<BitlyResult>("search", FormatAsString, "?limit=", limit, "&offset=", offset, "&query=", query, "&lang=", lang, "&cities=", cities, "&domain=", domain, "&fields=", fields);
 		}
@@ -67,6 +85,7 @@ namespace OpenBitly
 
 		public virtual BitlyShortenResult ShortenUrl(ShortenUrlOptions options)
 		{
+			 
 			var longUrl = options.Longurl;	
 			
 			return WithHammock<BitlyShortenResult>("shorten", FormatAsString, "?longUrl=", longUrl);
@@ -75,9 +94,22 @@ namespace OpenBitly
 
 		public virtual BitlyLinkResult GetClickCount(GetClickCountOptions options)
 		{
+			 
 			var link = options.Link;	
 			
 			return WithHammock<BitlyLinkResult>("link/clicks", FormatAsString, "?link=", link);
+		}
+
+
+		public virtual BitlyLinkCollectionResult GetClickCountOverTime(GetClickCountOverTimeOptions options)
+		{
+			 
+			var units = options.Units; 
+			var rollup = options.Rollup; 
+			var link = options.Link; 
+			var unit = options.Unit;	
+			
+			return WithHammock<BitlyLinkCollectionResult>("link/clicks", FormatAsString, "?units=", units, "&rollup=", rollup, "&link=", link, "&unit=", unit);
 		}
 
 	}

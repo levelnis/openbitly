@@ -17,11 +17,6 @@ namespace OpenBitly
             this.exception = exception;
         }
 
-        public virtual BitlyError Error
-        {
-            get { return response.ErrorContentEntity as BitlyError; }
-        }
-
         public virtual NameValueCollection Headers
         {
             get { return response.Headers; }

@@ -58,7 +58,8 @@ namespace OpenBitly
 	{<# foreach(OpenBitlyMethod method in methods) { #><#= method.IsDeprecated ? "[Obsolete(\"Bitly has declared this method obsolete; it may cease to function at any time. Check http://dev.bitly.com/deprecated.html for alternatives.\")]" : "" #>
 		public virtual <#= method.Type #> <#= method.Name #>(<# if(method.Parameters.Count > 0) { #><#= method.Name #>Options options<# } #>)
 		{
-			<# foreach(var parameter in method.Parameters) { #>var <#= parameter.Name #> = options.<#= parameter.PropertyName #>;<# } #>	
+			<# foreach(var parameter in method.Parameters) { #> 
+			var <#= parameter.Name #> = options.<#= parameter.PropertyName #>;<# } #>	
 			
 			return WithHammock<<#= method.Type #>>(<# switch(method.Method){case "POST": #>WebMethod.Post, <# break; case "PUT": #>WebMethod.Put, <#break; case "DELETE": #>WebMethod.Delete, <# break; case "HEAD":#>WebMethod.Head, <# break; case "OPTIONS": #>WebMethod.Options, <# break; default: break; } #><#= method.Path #>, FormatAsString<# var count = method.Parameters.Count(); if(count > 0) { #>, <# } #><# for(var i = 0; i < count; i++) { var parameter = method.Parameters[i]; #>"<# if(i == 0) { #>?<# } else { #>&<# } #><#= method.ParametersAreLeftVerbatim ? parameter.Name : Helpers.Underscore(parameter.Name) #>=", <#= parameter.Name #><# if(i < count - 1) { #>, <# } #><# } #>);
 		}
