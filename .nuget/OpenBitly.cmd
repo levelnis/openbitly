@@ -1,1 +1,1 @@
-nuget pack OpenBitly.nuspec -OutputDirectory "D:\Code\Nuget" -Version 1.0.7
+nuget pack OpenBitly.nuspec -OutputDirectory "F:\Code\Nuget" -Version 1.0.8

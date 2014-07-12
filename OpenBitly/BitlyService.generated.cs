@@ -55,6 +55,8 @@ namespace OpenBitly
 		BitlyLinkResult GetClickCount(GetClickCountOptions options);	
 
 		BitlyLinkCollectionResult GetClickCountOverTime(GetClickCountOverTimeOptions options);	
+		
+		void Authenticate();
 	}
 
 	public partial class BitlyService : IBitlyService
@@ -112,5 +114,10 @@ namespace OpenBitly
 			return WithHammock<BitlyLinkCollectionResult>("link/clicks", FormatAsString, "?units=", units, "&rollup=", rollup, "&link=", link, "&unit=", unit);
 		}
 
+		
+		public void Authenticate()
+		{
+			AuthenticateWith(GetAccessToken().Token);
+		}
 	}
 }

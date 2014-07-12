@@ -52,6 +52,8 @@ namespace OpenBitly
 	{<# foreach(OpenBitlyMethod method in methods) { #><#= method.IsDeprecated ? "[Obsolete(\"Bitly has declared this method obsolete; it may cease to function at any time. Check http://dev.bitly.com/deprecated.html for alternatives.\")]" : "" #>
 		<#= method.Type #> <#= method.Name #>(<# if(method.Parameters.Count > 0) { #><#= method.Name #>Options options<# } #>);	
 <# } #>
+		
+		void Authenticate();
 	}
 
 	public partial class BitlyService : IBitlyService
@@ -65,6 +67,11 @@ namespace OpenBitly
 		}
 
 <# } #>
+		
+		public void Authenticate()
+		{
+			AuthenticateWith(GetAccessToken().Token);
+		}
 	}
 }
 <#+

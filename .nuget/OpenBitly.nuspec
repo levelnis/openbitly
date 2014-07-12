@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>OpenBitly</id>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <title>OpenBitly</title>
     <authors>Simon Rigby</authors>
     <owners>Levelnis</owners>
@@ -10,6 +10,7 @@
       A Bitly API Wrapper service that uses OAuth 2.0 authentication and T4 templates to make adding new endpoints easy.
     </description>
     <releaseNotes>
+      1.0.8 - exposed Authenticate method on the interface to allow clients to refresh the access token via the injected dependency.
       1.0.7 - added testable IBitlyOptionFactory/BitlyOptionFactory for creating the option types that must be passed in to the service method calls.
       1.0.5 - added GetClickCountOverTime which calls /v3/link/clicks with rollup=false.
     </releaseNotes>
